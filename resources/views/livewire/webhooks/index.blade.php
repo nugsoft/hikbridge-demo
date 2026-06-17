@@ -36,7 +36,7 @@
                 >Copy</button>
             </div>
             <div class="mt-3">
-                <flux:button size="sm" wire:click="$set('newWebhookSecret', null)">Dismiss</flux:button>
+                <flux:button size="sm" wire:click="dismissNewSecret">Dismiss</flux:button>
             </div>
         </flux:callout>
     @elseif ($lastCreateResponse !== null && !$newWebhookSecret)
