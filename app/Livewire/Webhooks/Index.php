@@ -133,6 +133,12 @@ class Index extends Component
         }
     }
 
+    public function dismissNewSecret(): void
+    {
+        $this->newWebhookSecret = null;
+        $this->lastCreateResponse = null;
+    }
+
     public function toggleEventType(string $type): void
     {
         if (in_array($type, $this->event_types)) {
