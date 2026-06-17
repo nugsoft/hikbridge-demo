@@ -2,6 +2,14 @@
 
 A reference implementation of the [`nugsoft/hikbridge-laravel-sdk`](https://packagist.org/packages/nugsoft/hikbridge-laravel-sdk). Every feature of the SDK is exercised here so you can copy patterns directly into your own project.
 
+## Live demo
+
+Want to see it running before you dive into the code? A hosted version is available at:
+
+**[hikbridge-demo.nugsoftstagging.com](https://hikbridge-demo.nugsoftstagging.com/)**
+
+Log in, poke around the employees, devices, webhooks, and attendance pages, and get a feel for what the SDK can do before you write a single line.
+
 ---
 
 ## What this demo covers
