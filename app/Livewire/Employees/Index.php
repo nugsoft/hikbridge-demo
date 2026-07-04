@@ -4,38 +4,53 @@ namespace App\Livewire\Employees;
 
 use Livewire\Attributes\Layout;
 use Livewire\Component;
-use Nugsoft\HikBridge\Facades\HikBridge;
 use Nugsoft\HikBridge\Exceptions\HikBridgeException;
 use Nugsoft\HikBridge\Exceptions\ValidationException;
+use Nugsoft\HikBridge\Facades\HikBridge;
 use Nugsoft\HikBridge\PendingOperation;
 
 #[Layout('layouts.app', ['title' => 'Employees'])]
 class Index extends Component
 {
     public array $persons = [];
+
     public array $devices = [];
+
     public ?string $orgName = null;
+
     public ?string $error = null;
+
     public ?string $success = null;
 
     // Create modal
     public bool $showCreateModal = false;
+
     public string $person_code = '';
+
     public string $first_name = '';
+
     public string $last_name = '';
+
     public string $status = 'active';
 
     // Edit modal
     public bool $showEditModal = false;
+
     public ?int $editingPersonId = null;
+
     public string $editFirstName = '';
+
     public string $editLastName = '';
+
     public string $editStatus = 'active';
+
     public string $editPersonCode = '';
 
     // Sync to device modal
     public bool $showSyncModal = false;
+
     public ?int $syncingPersonId = null;
+
     public ?int $syncDeviceId = null;
 
     public function mount(): void
@@ -72,7 +87,7 @@ class Index extends Component
     public function loadOrg(): void
     {
         try {
-            $response = HikBridge::organization()->get();
+            $response = HikBridge::business()->get();
             $this->orgName = $response['data']['name'] ?? null;
         } catch (HikBridgeException) {
             // non-fatal
@@ -85,17 +100,17 @@ class Index extends Component
     {
         $this->validate([
             'person_code' => 'required|string|max:50',
-            'first_name'  => 'required|string|max:100',
-            'last_name'   => 'required|string|max:100',
-            'status'      => 'required|in:active,inactive',
+            'first_name' => 'required|string|max:100',
+            'last_name' => 'required|string|max:100',
+            'status' => 'required|in:active,inactive',
         ]);
 
         try {
             $result = HikBridge::persons()->create([
                 'person_code' => $this->person_code,
-                'first_name'  => $this->first_name,
-                'last_name'   => $this->last_name,
-                'status'      => $this->status,
+                'first_name' => $this->first_name,
+                'last_name' => $this->last_name,
+                'status' => $this->status,
             ]);
 
             if ($result instanceof PendingOperation) {
@@ -126,26 +141,26 @@ class Index extends Component
         }
 
         $this->editingPersonId = $personId;
-        $this->editPersonCode  = $person['person_code'] ?? '';
-        $this->editFirstName   = $person['first_name'] ?? '';
-        $this->editLastName    = $person['last_name'] ?? '';
-        $this->editStatus      = $person['status'] ?? 'active';
-        $this->showEditModal   = true;
+        $this->editPersonCode = $person['person_code'] ?? '';
+        $this->editFirstName = $person['first_name'] ?? '';
+        $this->editLastName = $person['last_name'] ?? '';
+        $this->editStatus = $person['status'] ?? 'active';
+        $this->showEditModal = true;
     }
 
     public function updatePerson(): void
     {
         $this->validate([
             'editFirstName' => 'required|string|max:100',
-            'editLastName'  => 'required|string|max:100',
-            'editStatus'    => 'required|in:active,inactive',
+            'editLastName' => 'required|string|max:100',
+            'editStatus' => 'required|in:active,inactive',
         ]);
 
         try {
             HikBridge::persons()->update($this->editingPersonId, [
                 'first_name' => $this->editFirstName,
-                'last_name'  => $this->editLastName,
-                'status'     => $this->editStatus,
+                'last_name' => $this->editLastName,
+                'status' => $this->editStatus,
             ]);
 
             $this->success = "{$this->editFirstName} {$this->editLastName} updated.";
@@ -164,7 +179,7 @@ class Index extends Component
     public function openSyncModal(int $personId): void
     {
         $this->syncingPersonId = $personId;
-        $this->showSyncModal   = true;
+        $this->showSyncModal = true;
         if (empty($this->devices)) {
             $this->loadDevices();
         }
@@ -181,10 +196,10 @@ class Index extends Component
         try {
             HikBridge::persons()->create([
                 'person_code' => $person['person_code'],
-                'first_name'  => $person['first_name'] ?? '',
-                'last_name'   => $person['last_name'] ?? '',
-                'status'      => $person['status'] ?? 'active',
-                'device_id'   => $this->syncDeviceId,
+                'first_name' => $person['first_name'] ?? '',
+                'last_name' => $person['last_name'] ?? '',
+                'status' => $person['status'] ?? 'active',
+                'device_id' => $this->syncDeviceId,
             ]);
 
             $deviceName = collect($this->devices)->firstWhere('id', $this->syncDeviceId)['name'] ?? "Device #{$this->syncDeviceId}";

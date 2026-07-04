@@ -4,7 +4,7 @@
         <div>
             <flux:heading size="xl">Devices</flux:heading>
             <flux:text class="mt-1 text-zinc-500">
-                Manage Hikvision device connections and assign them to organizations.
+                Manage Hikvision device connections for your business.
             </flux:text>
         </div>
         <flux:button icon="arrow-path" variant="ghost" wire:click="loadDevices">Refresh</flux:button>
