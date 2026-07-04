@@ -17,17 +17,7 @@
         "livewire/blaze": "^1.0",
         "livewire/flux": "^2.13.1",
         "livewire/livewire": "^4.1",
-        "nugsoft/hikbridge-laravel-sdk": "@dev"
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../hikbridge-laravel-sdk",
-            "options": {
-                "symlink": true
-            }
-        }
-    ],
     "require-dev": {
         "fakerphp/faker": "^1.24",
         "larastan/larastan": "^3.9",
