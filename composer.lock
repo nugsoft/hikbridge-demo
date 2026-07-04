@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "74442a1abd8b0eda45fdf44524a3489b",
+    "content-hash": "f8adfc6da628121b7df22f982600c705",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2993,17 +2993,11 @@
         },
         {
             "name": "nugsoft/hikbridge-laravel-sdk",
-            "version": "v1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/nugsoft/hikbridge-laravel-sdk.git",
-                "reference": "58bf92cda4b50dc446ab577d99f021aae28ea93f"
-            },
+            "version": "2.x-dev",
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/nugsoft/hikbridge-laravel-sdk/zipball/58bf92cda4b50dc446ab577d99f021aae28ea93f",
-                "reference": "58bf92cda4b50dc446ab577d99f021aae28ea93f",
-                "shasum": ""
+                "type": "path",
+                "url": "../hikbridge-laravel-sdk",
+                "reference": "e32735e2ccfddaaa7aaf0057d4144e11afab6967"
             },
             "require": {
                 "illuminate/http": "^11.0|^12.0|^13.0",
@@ -3017,12 +3011,12 @@
             "type": "library",
             "extra": {
                 "laravel": {
-                    "aliases": {
-                        "HikBridge": "Nugsoft\\HikBridge\\Facades\\HikBridge"
-                    },
                     "providers": [
                         "Nugsoft\\HikBridge\\HikBridgeServiceProvider"
-                    ]
+                    ],
+                    "aliases": {
+                        "HikBridge": "Nugsoft\\HikBridge\\Facades\\HikBridge"
+                    }
                 }
             },
             "autoload": {
@@ -3030,16 +3024,19 @@
                     "Nugsoft\\HikBridge\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Nugsoft\\HikBridge\\Tests\\": "tests/"
+                }
+            },
             "license": [
                 "MIT"
             ],
             "description": "Laravel SDK for the HikBridge External Integration API",
-            "support": {
-                "issues": "https://github.com/nugsoft/hikbridge-laravel-sdk/issues",
-                "source": "https://github.com/nugsoft/hikbridge-laravel-sdk/tree/v1.0.1"
-            },
-            "time": "2026-06-16T13:01:45+00:00"
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
         },
         {
             "name": "nunomaduro/termwind",
@@ -10302,7 +10299,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "nugsoft/hikbridge-laravel-sdk": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

@@ -30,6 +30,30 @@
                 placeholder="email@example.com"
             />
 
+            <flux:separator :text="__('Your business')" />
+
+            <!-- Business Name -->
+            <flux:input
+                name="business_name"
+                :label="__('Business name')"
+                :value="old('business_name')"
+                type="text"
+                required
+                :placeholder="__('Acme Inc.')"
+            />
+
+            <!-- HikBridge API Key -->
+            <flux:input
+                name="hik_api_key"
+                :label="__('HikBridge API key')"
+                :value="old('hik_api_key')"
+                type="text"
+                required
+                autocomplete="off"
+                placeholder="hbk_..."
+                :description="__('Scopes this account to your business\'s devices only. It is stored encrypted and never shown in full again.')"
+            />
+
             <!-- Password -->
             <flux:input
                 name="password"

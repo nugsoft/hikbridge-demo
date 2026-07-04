@@ -7,25 +7,35 @@ use Carbon\Carbon;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Poll;
 use Livewire\Component;
-use Nugsoft\HikBridge\Facades\HikBridge;
 use Nugsoft\HikBridge\Exceptions\HikBridgeException;
+use Nugsoft\HikBridge\Facades\HikBridge;
 
 #[Layout('layouts.app', ['title' => 'Dashboard'])]
 class Dashboard extends Component
 {
     public ?array $organization = null;
+
     public int $totalPersons = 0;
+
     public int $activePersons = 0;
+
     public int $eventsToday = 0;
+
     public int $syncPending = 0;
+
     public int $syncFailed = 0;
+
     public ?string $lastSynced = null;
+
     public ?string $error = null;
+
     public ?string $success = null;
 
     // Chart data (7-day attendance)
     public array $chartLabels = [];
+
     public array $chartUnique = [];
+
     public array $chartTotal = [];
 
     // Today's roster (unique persons who accessed today)
@@ -55,8 +65,9 @@ class Dashboard extends Component
     private function loadOrg(): void
     {
         try {
-            $this->organization = HikBridge::organization()->get();
-        } catch (HikBridgeException) {}
+            $this->organization = HikBridge::business()->get();
+        } catch (HikBridgeException) {
+        }
     }
 
     private function loadPersonStats(): void
@@ -64,11 +75,12 @@ class Dashboard extends Component
         try {
             $response = HikBridge::persons()->list(['per_page' => 100]);
             $persons = $response['data'] ?? [];
-            $this->totalPersons  = count($persons);
+            $this->totalPersons = count($persons);
             $this->activePersons = count(array_filter($persons, fn ($p) => ($p['status'] ?? '') === 'active'));
-            $this->syncPending   = count(array_filter($persons, fn ($p) => ($p['sync_status'] ?? '') === 'pending'));
-            $this->syncFailed    = count(array_filter($persons, fn ($p) => ($p['sync_status'] ?? '') === 'failed'));
-        } catch (HikBridgeException) {}
+            $this->syncPending = count(array_filter($persons, fn ($p) => ($p['sync_status'] ?? '') === 'pending'));
+            $this->syncFailed = count(array_filter($persons, fn ($p) => ($p['sync_status'] ?? '') === 'failed'));
+        } catch (HikBridgeException) {
+        }
     }
 
     private function loadEventStats(): void
@@ -76,8 +88,8 @@ class Dashboard extends Component
         try {
             $today = Carbon::today();
             $response = HikBridge::events()->list([
-                'from'     => $today->toIso8601String(),
-                'to'       => $today->copy()->endOfDay()->toIso8601String(),
+                'from' => $today->toIso8601String(),
+                'to' => $today->copy()->endOfDay()->toIso8601String(),
                 'per_page' => 100,
             ]);
             $this->eventsToday = count($response['data'] ?? []);
@@ -90,15 +102,16 @@ class Dashboard extends Component
                     $this->lastSynced = Carbon::parse($latest)->diffForHumans();
                 }
             }
-        } catch (HikBridgeException) {}
+        } catch (HikBridgeException) {
+        }
     }
 
     private function loadChartData(): void
     {
         try {
-            $labels  = [];
-            $unique  = [];
-            $totals  = [];
+            $labels = [];
+            $unique = [];
+            $totals = [];
 
             for ($i = 6; $i >= 0; $i--) {
                 $day = Carbon::today()->subDays($i);
@@ -109,8 +122,8 @@ class Dashboard extends Component
 
                 do {
                     $params = [
-                        'from'     => $day->copy()->startOfDay()->toIso8601String(),
-                        'to'       => $day->copy()->endOfDay()->toIso8601String(),
+                        'from' => $day->copy()->startOfDay()->toIso8601String(),
+                        'to' => $day->copy()->endOfDay()->toIso8601String(),
                         'per_page' => 100,
                     ];
                     if ($cursor) {
@@ -123,14 +136,15 @@ class Dashboard extends Component
                 } while ($cursor);
 
                 $uniquePersons = count(array_unique(array_column($dayEvents, 'person_code')));
-                $unique[]  = $uniquePersons;
-                $totals[]  = count($dayEvents);
+                $unique[] = $uniquePersons;
+                $totals[] = count($dayEvents);
             }
 
             $this->chartLabels = $labels;
             $this->chartUnique = $unique;
-            $this->chartTotal  = $totals;
-        } catch (HikBridgeException) {}
+            $this->chartTotal = $totals;
+        } catch (HikBridgeException) {
+        }
     }
 
     private function loadTodayRoster(): void
@@ -144,20 +158,21 @@ class Dashboard extends Component
 
         if ($local->isNotEmpty()) {
             $this->todayRoster = $local->map(fn ($e) => [
-                'event_type'  => $e->event_type,
+                'event_type' => $e->event_type,
                 'person_code' => $e->person_code,
-                'device_id'   => $e->device_id,
+                'device_id' => $e->device_id,
                 'occurred_at' => $e->occurred_at?->toIso8601String(),
             ])->toArray();
+
             return;
         }
 
         // Fall back to API
         try {
-            $today    = Carbon::today();
+            $today = Carbon::today();
             $response = HikBridge::events()->list([
-                'from'     => $today->toIso8601String(),
-                'to'       => $today->copy()->endOfDay()->toIso8601String(),
+                'from' => $today->toIso8601String(),
+                'to' => $today->copy()->endOfDay()->toIso8601String(),
                 'per_page' => 100,
             ]);
             $events = $response['data'] ?? [];
@@ -170,7 +185,8 @@ class Dashboard extends Component
                 }
             }
             $this->todayRoster = array_values($seen);
-        } catch (HikBridgeException) {}
+        } catch (HikBridgeException) {
+        }
     }
 
     private function loadLiveFeed(): void
@@ -180,12 +196,13 @@ class Dashboard extends Component
 
         if ($local->isNotEmpty()) {
             $this->liveFeed = $local->map(fn ($e) => [
-                'event_type'  => $e->event_type,
+                'event_type' => $e->event_type,
                 'person_code' => $e->person_code,
-                'device_id'   => $e->device_id,
+                'device_id' => $e->device_id,
                 'device_name' => $e->device_name,
                 'occurred_at' => $e->occurred_at?->toIso8601String(),
             ])->toArray();
+
             return;
         }
 
@@ -193,10 +210,11 @@ class Dashboard extends Component
         try {
             $response = HikBridge::events()->list(['per_page' => 10]);
             $this->liveFeed = $response['data'] ?? [];
-        } catch (HikBridgeException) {}
+        } catch (HikBridgeException) {
+        }
     }
 
-    #[Poll(5000)]   // re-fetch live feed every 5 seconds
+    #[Poll(5000)] // re-fetch live feed every 5 seconds
     public function pollLiveFeed(): void
     {
         $this->loadLiveFeed();
